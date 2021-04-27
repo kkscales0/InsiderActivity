@@ -12,3 +12,5 @@ COPY Pipfile.lock .
 RUN pipenv install --deploy --ignore-pipfile
 
 COPY /src .
+
+CMD [ "pipenv", "run", "python", "/src/main.py" ]
