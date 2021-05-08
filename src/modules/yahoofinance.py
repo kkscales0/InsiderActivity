@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from . import constant
 
 
-def GetBasicStockInfo(ticker):
+def get_basic_stock_info(ticker):
     """Returns sector, industry, and description about passed ticker
     
     Arguments:
@@ -13,38 +13,38 @@ def GetBasicStockInfo(ticker):
     url = f"https://finance.yahoo.com/quote/{ticker}/profile"
     soup = BeautifulSoup(requests.get(url).content, 'html.parser')
 
-    profileSection = soup.find("div", class_='asset-profile-container')
-    if (profileSection is None):
+    profile_section = soup.find("div", class_='asset-profile-container')
+    if (profile_section is None):
         print(f'Couldn\'t load profile section from url={url}')
         return False
 
-    sectorTag = profileSection.find('span', text='Sector(s)')
-    if (sectorTag is None):
+    sector_tag = profile_section.find('span', text='Sector(s)')
+    if (sector_tag is None):
         print(f'Couldn\'t find span with text=Sector(s) at url={url}')
         return False
 
-    sector = sectorTag.findNext('span').get_text(strip=True)
+    sector = sector_tag.findNext('span').get_text(strip=True)
 
-    industryTag = profileSection.find('span', text='Industry')
-    if (industryTag is None):
+    industry_tag = profile_section.find('span', text='Industry')
+    if (industry_tag is None):
         print(f'Couldn\'t find span with text=Industry at url={url}')
         return False
 
-    industry = industryTag.findNext('span').get_text(strip=True)
+    industry = industry_tag.findNext('span').get_text(strip=True)
 
     print(sector, ' - ', industry)
 
-    descriptionSection = soup.find(class_='quote-sub-section')
-    if (descriptionSection is None):
+    description_section = soup.find(class_='quote-sub-section')
+    if (description_section is None):
         print(f'Couldn\'t load description section from url={url}')
         return False
 
-    description = descriptionSection.findNext('p').get_text(strip=True)
+    description = description_section.findNext('p').get_text(strip=True)
 
     print(description)
     return True
 
-def GetStockPricesOnDate(ticker, date):
+def get_stock_prices_on_date(ticker, date):
     """Returns open and close price for ticker passed on date passed
     
     Arguments:
@@ -60,19 +60,19 @@ def GetStockPricesOnDate(ticker, date):
         print(f'Couldn\'t load price table from url={url}')
         return False
 
-    dateSpan = table.find('span', text=date)
-    if (dateSpan is None):
+    date_span = table.find('span', text=date)
+    if (date_span is None):
         print(f'Couldn\'t find row for date={date} at url={url}')
         return False
 
-    dataRowList = list(dateSpan.findParent('tr'))
-    if (dataRowList is None or len(dataRowList) < constant.YF_TOTAL_COL):
+    date_row_list = list(date_span.findParent('tr'))
+    if (date_row_list is None or len(date_row_list) < constant.YF_TOTAL_COL):
         print(f'Couldn\'t find tr parent or there aren\'t enough columns in the table, for date={date} at url={url}')
         return False
     
 
-    openPrice = dataRowList[constant.YF_OPEN_COL].get_text(strip=True)
-    closePrice = dataRowList[constant.YF_CLOSE_COL].get_text(strip=True)
+    open_price = date_row_list[constant.YF_OPEN_COL].get_text(strip=True)
+    close_price = date_row_list[constant.YF_CLOSE_COL].get_text(strip=True)
 
-    print('open: ', openPrice, ' close: ', closePrice)
+    print('open: ', open_price, ' close: ', close_price)
     return True

@@ -27,7 +27,7 @@ class InsiderActivity:
             self.quantityOwned, self.changeInOwnership, self.value)
 
     @classmethod
-    def FromOpenInsiderTableRow(cls, tableRow):
+    def from_open_insider_table_row(cls, tableRow):
         rowContents = tableRow.contents
         return cls(
             rowContents[constant.FILING_DATE_COL].get_text(strip=True),
