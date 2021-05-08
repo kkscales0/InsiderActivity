@@ -11,3 +11,8 @@ QUANTITY_COL = 9
 QUANTITY_OWNED_COL = 10
 CHANGE_IN_OWNERSHIP_COL = 11
 VALUE_COL = 12
+
+# User to parse data from columns pulled from table at yahoo finance
+YF_OPEN_COL = 2
+YF_CLOSE_COL = 5
+YF_TOTAL_COL = 7
