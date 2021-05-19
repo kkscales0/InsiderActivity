@@ -1,9 +1,10 @@
+from datetime import date
 import requests
 from bs4 import BeautifulSoup
 from . import constant
 
 
-def get_basic_stock_info(ticker):
+def scrape_basic_stock_info(ticker: str) -> None:
     """Returns sector, industry, and description about passed ticker
     
     Arguments:
@@ -42,14 +43,13 @@ def get_basic_stock_info(ticker):
     description = description_section.findNext('p').get_text(strip=True)
 
     print(description)
-    return True
 
-def get_stock_prices_on_date(ticker, date):
+def scrape_stock_prices_on_date(ticker: str, date: date) -> None:
     """Returns open and close price for ticker passed on date passed
     
     Arguments:
     ticker -- stock ticker (ex: 'AAPL')
-    date -- date to find data for (format Mmm dd, yyyy ex: 'May 05, 2021')
+    date -- date to find data for
     """
     
     url = f"https://finance.yahoo.com/quote/{ticker}/history"
@@ -60,14 +60,16 @@ def get_stock_prices_on_date(ticker, date):
         print(f'Couldn\'t load price table from url={url}')
         return False
 
-    date_span = table.find('span', text=date)
+    date_formatted: str = date.strftime("%b %d, %Y")
+
+    date_span = table.find('span', text=date_formatted)
     if (date_span is None):
-        print(f'Couldn\'t find row for date={date} at url={url}')
+        print(f'Couldn\'t find row for date={date_formatted} at url={url}')
         return False
 
     date_row_list = list(date_span.findParent('tr'))
     if (date_row_list is None or len(date_row_list) < constant.YF_TOTAL_COL):
-        print(f'Couldn\'t find tr parent or there aren\'t enough columns in the table, for date={date} at url={url}')
+        print(f'Couldn\'t find tr parent or there aren\'t enough columns in the table, for date={date_formatted} at url={url}')
         return False
     
 
@@ -75,4 +77,3 @@ def get_stock_prices_on_date(ticker, date):
     close_price = date_row_list[constant.YF_CLOSE_COL].get_text(strip=True)
 
     print('open: ', open_price, ' close: ', close_price)
-    return True
