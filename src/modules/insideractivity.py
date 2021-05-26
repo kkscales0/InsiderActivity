@@ -42,6 +42,16 @@ class InsiderActivity:
     def from_open_insider_row(cls,
                              table_row: str,
                              has_company_name: bool) -> InsiderActivity:
+        """
+        Creates InsiderActivity object using a row from the html table on
+        openinsider
+
+        Arguments:
+        table_row -- html table row from openinsider
+        has_company_name -- indicates if table has company name or not
+        it should be false when getting insider activity for a specific ticker
+        """
+        
         rowContents = table_row.contents
         shift = 0 if has_company_name else -1
         return cls(
